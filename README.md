@@ -21,9 +21,9 @@ The goal is to uncover usage patterns, user behaviour, and provide insights that
 -Data Cleaning: Standardised column names, removed missing values and incorrect records.<br />
 -Data Transformation: Created new columns such as ride length and day of the week.<br />
 -Exploratory Data Analysis (EDA):<br />
-&nbsp;&nbsp;-Ride duration statistics by user type<br />
-&nbsp;&nbsp;-Bike preference analysis<br />
-&nbsp;&nbsp;-Usage trends across weekdays and time of day<br /><br />
+&nbsp;&nbsp;&nbsp;-Ride duration statistics by user type<br />
+&nbsp;&nbsp;&nbsp;-Bike preference analysis<br />
+&nbsp;&nbsp;&nbsp;-Usage trends across weekdays and time of day<br /><br />
   
 📚 **Key Findings**<br />
 -Casual users prefer weekends, while members mostly ride on weekdays.<br />
