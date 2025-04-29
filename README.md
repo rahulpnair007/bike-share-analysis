@@ -1,4 +1,4 @@
-🚲 Bike Share Analysis Project
+🚲 Bike Share Analysis Project<br />
 📋 Project Overview
 This project analyses 12 months of historical trip data from a bike-share company.
 The goal is to uncover usage patterns, user behaviour, and provide insights that can help improve operational decisions and marketing strategies.
