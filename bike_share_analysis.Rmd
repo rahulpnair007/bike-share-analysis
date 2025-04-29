@@ -1,0 +1,104 @@
+---
+title: "Bike Share - Case Study"
+author: "Rahul"
+date: "2025-04-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+```
+
+# 1. Data Loading
+
+```{r load-data}
+# Set your working directory (adjust the path as needed)
+# setwd("D:/Unni/Course_Materials/CaseStudy_1/Last_12_Months_Data")
+
+# List and read all CSV files
+file_list <- list.files(path = "D:/Unni/Course_Materials/CaseStudy_1/Last_12_Months_Data", pattern = "*.csv", full.names = TRUE)
+bike_data <- file_list %>%
+  map_df(read_csv)
+```
+
+# 2. Data Cleaning
+
+```{r clean-data}
+# View basic structure
+str(bike_data)
+
+# Clean column names
+bike_data <- bike_data %>%
+  janitor::clean_names()
+
+# Create new columns
+bike_data <- bike_data %>%
+  mutate(started_at = ymd_hms(started_at),
+         ended_at = ymd_hms(ended_at),
+         ride_length = as.numeric(difftime(ended_at, started_at, units = "mins")),
+         day_of_week = wday(started_at, label = TRUE)) %>%
+  filter(ride_length > 0)
+```
+
+# 3. Data Analysis
+
+```{r analysis}
+# Summary Statistics
+summary(bike_data$ride_length)
+
+# Ride counts by bike type
+bike_data %>%
+  group_by(rideable_type) %>%
+  summarise(total_rides = n())
+
+# Ride counts by day of week
+bike_data %>%
+  group_by(day_of_week) %>%
+  summarise(total_rides = n())
+```
+
+# 4. Data Visualisation
+
+```{r visualisation}
+# 4.1 Ride Length Distribution
+bike_data %>%
+  ggplot(aes(x = ride_length)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
+  xlim(0, 100) +
+  labs(title = "Distribution of Ride Lengths", x = "Ride Length (minutes)", y = "Number of Rides") +
+  theme_minimal()
+
+# 4.2 Rides by Bike Type
+bike_data %>%
+  group_by(rideable_type) %>%
+  summarise(total_rides = n()) %>%
+  ggplot(aes(x = rideable_type, y = total_rides, fill = rideable_type)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Number of Rides by Bike Type", x = "Bike Type", y = "Total Rides") +
+  theme_minimal()
+
+# 4.3 Rides by Day of Week
+bike_data %>%
+  group_by(day_of_week) %>%
+  summarise(total_rides = n()) %>%
+  mutate(day_of_week = factor(day_of_week, levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))) %>%
+  ggplot(aes(x = day_of_week, y = total_rides, fill = day_of_week)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Number of Rides by Weekday", x = "Day of the Week", y = "Total Rides") +
+  theme_minimal()
+```
+
+# 5. Summary and Recommendations
+
+```{r conclusion, echo=FALSE}
+# Key Takeaways
+cat("\n- Most rides are under 40 minutes.\n")
+cat("- Classic bikes were the most popular ride type.\n")
+cat("- Highest usage is observed during weekends.\n")
+cat("- Recommend focusing on weekend promotions and optimising bike availability.")
